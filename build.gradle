@@ -15,6 +15,7 @@ dependencies {
     compile files('C:\\Users\\grzeg\\IdeaProjects\\CPD_CACHE\\libs\\jconn4.jar')
 
     testCompile group: 'junit', name: 'junit', version: '4.12'
+    testCompile group: 'org.mockito', name: 'mockito-all', version: '1.8.4'
 }
 
 sourceSets {

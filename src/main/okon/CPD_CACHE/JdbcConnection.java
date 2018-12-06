@@ -1,15 +1,16 @@
 package okon.CPD_CACHE;
 
+import javax.sql.DataSource;
 import java.io.Closeable;
 import java.sql.*;
-import java.util.Properties;
+import java.time.LocalDateTime;
 
 public class JdbcConnection implements Closeable {
     private final Connection connection;
 
-    JdbcConnection(String url, Properties properties) {
+    public JdbcConnection(DataSource dataSource) {
         try {
-            connection = DriverManager.getConnection(url, properties);
+            connection = dataSource.getConnection();
         } catch (SQLException e) {
             throw new AppException(e);
         }
@@ -23,6 +24,10 @@ public class JdbcConnection implements Closeable {
         } catch (SQLException e) {
             throw new AppException(e);
         }
+    }
+
+    public LocalDateTime getTimeStamp() {
+        return LocalDateTime.now();
     }
 
     @Override
