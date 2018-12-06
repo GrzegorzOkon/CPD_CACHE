@@ -1,10 +1,10 @@
 package okon.CPD_CACHE;
 
-import java.util.Properties;
+import com.sybase.jdbc4.jdbc.SybDataSource;
+
+import javax.sql.DataSource;
 
 public class CpdCacheApp {
-    private static final String DB_URL_TEMPLATE = "jdbc:sybase:Tds:%s:%s/master";
-
     private final ConnectionFactory connectionFactory;
 
     public CpdCacheApp() {
@@ -18,22 +18,31 @@ public class CpdCacheApp {
     public static void main (String args[]) {
         CpdCacheApp cpd_cache_app = new CpdCacheApp();
 
-        cpd_cache_app.clearDatabaseCache("xx.xx.xx.xx", "xxxx", "xxx", "xxx");
-        cpd_cache_app.clearDatabaseCache("yy.yy.yy.yy", "yyy", "yyy", "yyy");
-        //cpd_cache_app.clearDatabaseCache("192.168.43.216", "5000", "sa", "");
+        DataSource dataSource1 = cpd_cache_app.createDataSource("xx.xx.xx.xx", 1111, "xxx", "xxx");
+        DataSource dataSource2 = cpd_cache_app.createDataSource("yy.yy.yy.yy", 2222, "yyy", "yyy");
+
+        cpd_cache_app.clearDatabaseCache(dataSource1);
+        cpd_cache_app.clearDatabaseCache(dataSource2);
     }
 
-    public void clearDatabaseCache(String ip, String port, String login, String password) {
-        String requestUrl = String.format(DB_URL_TEMPLATE, ip, port);
-
-        Properties properties = new Properties();
-        properties.put("user", login );
-        properties.put("password", password);
-
-        try (JdbcConnection connection = connectionFactory.build(requestUrl, properties)) {
+    public void clearDatabaseCache(DataSource dataSource) {
+        try (JdbcConnection connection = connectionFactory.build(dataSource)) {
             connection.execute();
         } catch (Exception e) {
             throw new AppException(e);
         }
+    }
+
+    public DataSource createDataSource(String serverName, int portNumber, String user, String password) {
+        SybDataSource dataSource = new SybDataSource();
+
+        dataSource.setServerName(serverName);
+        dataSource.setPortNumber(portNumber);
+        dataSource.setUser(user);
+        dataSource.setPassword(password);
+        //dataSource.setDatabaseName("xxx");
+        dataSource.setAPPLICATIONNAME("CPD_CACHE");
+
+        return dataSource;
     }
 }
