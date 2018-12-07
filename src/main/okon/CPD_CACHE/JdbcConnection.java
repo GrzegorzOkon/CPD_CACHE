@@ -16,7 +16,18 @@ public class JdbcConnection implements Closeable {
         }
     }
 
-    public void execute() {
+    public Message execute() {
+        LocalDateTime startTime = null;
+        LocalDateTime endTime = null;
+
+        startTime = getTimeStamp();
+        executeDbcc();
+        endTime = getTimeStamp();
+
+        return new Message(startTime, endTime);
+    }
+
+    public void executeDbcc() {
         String sql = "dbcc proc_cache(free_unused)";
 
         try (Statement stmt = connection.createStatement()) {
