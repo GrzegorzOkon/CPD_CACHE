@@ -28,7 +28,7 @@ public class SybConnection implements Closeable {
         endTime = getTimeStamp();
         endingFreeCacheSize = checkFreeCacheSize();
 
-        return new Message(startTime, endTime);
+        return new Message(startingFreeCacheSize, endingFreeCacheSize, startTime, endTime);
     }
 
     public int checkFreeCacheSize() {
@@ -36,7 +36,7 @@ public class SybConnection implements Closeable {
         int freeCacheSize = 0;
 
         try (Statement stmt = connection.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
-            if (rs.first()) {
+            while (rs.next()) {
                 freeCacheSize = rs.getInt("Num_free");
             }
         } catch (SQLException e) {

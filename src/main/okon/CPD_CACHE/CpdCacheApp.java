@@ -37,7 +37,7 @@ public class CpdCacheApp {
     public Message clearDatabaseCache(DataSource dataSource) {
         Message message = null;
 
-        try (JdbcConnection connection = connectionFactory.build(dataSource)) {
+        try (SybConnection connection = connectionFactory.build(dataSource)) {
             message = connection.execute();
         } catch (Exception e) {
             throw new AppException(e);
@@ -53,7 +53,7 @@ public class CpdCacheApp {
         dataSource.setPortNumber(portNumber);
         dataSource.setUser(user);
         dataSource.setPassword(password);
-        //dataSource.setDatabaseName("xxx");
+        dataSource.setDatabaseName("master");
         dataSource.setAPPLICATIONNAME("CPD_CACHE");
 
         return dataSource;
@@ -64,9 +64,10 @@ public class CpdCacheApp {
             for(Message message : messages) {
                 List<byte[]> formattedText = new TxtFormatter(message).format();
 
-                out.write(formattedText.get(0));
-                out.write(System.getProperty("line.separator").getBytes());
-                out.write(formattedText.get(1));
+                for (byte[] item : formattedText) {
+                    out.write(item);
+                    out.write(System.getProperty("line.separator").getBytes());
+                }
                 out.write(System.getProperty("line.separator").getBytes());
             }
         } catch (Exception e) {

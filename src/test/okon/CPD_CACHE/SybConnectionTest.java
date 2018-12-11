@@ -36,13 +36,13 @@ public class SybConnectionTest {
         assertNotNull(dataSourceMock);
         when(dataSourceMock.getConnection()).thenReturn(connectionMock);
         when(connectionMock.createStatement()).thenReturn(statementMock);
-        when(resultSetMock.first()).thenReturn(true);
+        when(resultSetMock.next()).thenReturn(true).thenReturn(false);
         when(resultSetMock.getInt("Num_free")).thenReturn(100000);
         when(statementMock.executeQuery(any(String.class))).thenReturn(resultSetMock);
     }
 
     @Test
-    public void shouldSayThatCacheIsBiggerThanZero() {
+    public void shouldSayThatCacheIsBiggerThanNinetyThousand() {
         SybConnection sybConnection;;
         int freeCache = 0;
 
@@ -52,7 +52,7 @@ public class SybConnectionTest {
             freeCache = sybConnection.checkFreeCacheSize();
         } catch(AppException ex) {}
 
-        assertTrue(freeCache > 0);
+        assertTrue(freeCache > 90000);
     }
 
     @Test
