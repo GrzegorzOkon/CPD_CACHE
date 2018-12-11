@@ -14,7 +14,7 @@ public class TxtFormatter {
     public List<byte[]> format() {
         List<byte[]> formattedText = new ArrayList<>();
 
-        if (message.getEndingFreeCacheSize() > message.getStartingFreeCacheSize()) {
+        if (isCacheFreed()) {
             formattedText.add("Polecenie 'dbcc proc_cache(free_unused)' zostalo wykonane poprawnie.".getBytes());
             formattedText.add(("Czas wykonania: " + Duration.between(message.getStartTime(), message.getEndTime()).toMillis() + " ms.").getBytes());
         } else {
@@ -22,5 +22,11 @@ public class TxtFormatter {
         }
 
         return formattedText;
+    }
+
+    private boolean isCacheFreed() {
+        if (message.getEndingFreeCacheSize() > message.getStartingFreeCacheSize()) {
+            return true;
+        } else return false;
     }
 }
