@@ -14,8 +14,8 @@ public class TxtFormatter {
     public List<byte[]> format() {
         List<byte[]> formattedText = new ArrayList<>();
 
-        formattedText.add("Polecenie: dbcc proc_cache(free_unused) zostało wykonane poprawnie.".getBytes());
-        formattedText.add(("Czas wykonania " + Duration.between(message.getStartTime(), message.getEndTime()).getNano() + "ms").getBytes());
+        formattedText.add("Polecenie 'dbcc proc_cache(free_unused)' zostalo wykonane poprawnie.".getBytes());
+        formattedText.add(("Czas wykonania: " + Duration.between(message.getStartTime(), message.getEndTime()).toMillis() + " ms.").getBytes());
 
         return formattedText;
     }

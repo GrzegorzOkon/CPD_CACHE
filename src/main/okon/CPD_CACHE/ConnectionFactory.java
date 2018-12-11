@@ -4,7 +4,7 @@ import javax.sql.DataSource;
 
 public class ConnectionFactory {
 
-    public JdbcConnection build(DataSource dataSource) {
-        return new JdbcConnection(dataSource);
+    public SybConnection build(DataSource dataSource) {
+        return new SybConnection(dataSource);
     }
 }
