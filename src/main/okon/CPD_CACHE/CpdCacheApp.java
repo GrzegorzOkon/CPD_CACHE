@@ -1,37 +1,52 @@
 package okon.CPD_CACHE;
 
-import com.sybase.jdbc4.jdbc.SybDataSource;
+import org.w3c.dom.Element;
 
 import javax.sql.DataSource;
+import java.io.File;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
 public class CpdCacheApp {
     private final ConnectionFactory connectionFactory;
+    private final DataSourceBuilder dataSourceBuilder;
 
     public CpdCacheApp() {
-        this(new ConnectionFactory());
+        this(new ConnectionFactory(), new DataSourceBuilder());
     }
 
-    public CpdCacheApp(ConnectionFactory connectionFactory) {
+    public CpdCacheApp(ConnectionFactory connectionFactory, DataSourceBuilder dataSourceBuilder) {
         this.connectionFactory = connectionFactory;
+        this.dataSourceBuilder = dataSourceBuilder;
     }
 
     public static void main (String args[]) {
         CpdCacheApp cpd_cache_app = new CpdCacheApp();
 
-        DataSource dataSource1 = cpd_cache_app.createDataSource("xx.xx.xx.xx", 1111, "xxx", "xxx");
-        DataSource dataSource2 = cpd_cache_app.createDataSource("yy.yy.yy.yy", 2222, "yyy", "yyy");
+        List<DataSource> dataSources = cpd_cache_app.loadConfiguration("./settings/config.xml");
 
-        Message message1 = cpd_cache_app.clearDatabaseCache(dataSource1);
-        Message message2 = cpd_cache_app.clearDatabaseCache(dataSource2);
+        List<Message> messages = cpd_cache_app.clearAllCaches(dataSources);
 
+        cpd_cache_app.saveReport("CPD_CACHE.txt", messages);
+    }
+
+    public List<DataSource> loadConfiguration(String pathname) {
+        ConfigurationParser parser = new ConfigurationParser();
+        Element root = parser.parseXml(new File(pathname));
+
+        return dataSourceBuilder.build(root);
+    }
+
+    public List<Message> clearAllCaches(List<DataSource> dataSources) {
         List<Message> messages = new ArrayList<>();
-        messages.add(message1);
-        messages.add(message2);
 
-        cpd_cache_app.saveToFile("CPD_CACHE.txt", messages);
+        for (DataSource dataSource : dataSources) {
+            Message message = clearDatabaseCache(dataSource);
+            messages.add(message);
+        }
+
+        return messages;
     }
 
     public Message clearDatabaseCache(DataSource dataSource) {
@@ -46,20 +61,7 @@ public class CpdCacheApp {
         return message;
     }
 
-    public DataSource createDataSource(String serverName, int portNumber, String user, String password) {
-        SybDataSource dataSource = new SybDataSource();
-
-        dataSource.setServerName(serverName);
-        dataSource.setPortNumber(portNumber);
-        dataSource.setUser(user);
-        dataSource.setPassword(password);
-        dataSource.setDatabaseName("master");
-        dataSource.setAPPLICATIONNAME("CPD_CACHE");
-
-        return dataSource;
-    }
-
-    public void saveToFile(String fileName, List<Message> messages) {
+    public void saveReport(String fileName, List<Message> messages) {
         try (FileOutputStream out = new FileOutputStream(new java.io.File(fileName))) {
             for(Message message : messages) {
                 List<byte[]> formattedText = new TxtFormatter(message).format();
