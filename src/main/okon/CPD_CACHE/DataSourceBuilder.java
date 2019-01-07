@@ -6,6 +6,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import javax.sql.DataSource;
+import javax.xml.bind.DatatypeConverter;
 import java.util.ArrayList;
 
 public class DataSourceBuilder {
@@ -25,12 +26,18 @@ public class DataSourceBuilder {
                     String dbUser = element.getElementsByTagName("db_user").item(0).getTextContent();
                     String dbPassword = element.getElementsByTagName("db_pswd").item(0).getTextContent();
 
-                    dataSources.add(createDataSource(dbIp, dbPort, dbUser, dbPassword));
+                    dataSources.add(createDataSource(dbIp, dbPort, fromHex(dbUser), fromHex(dbPassword)));
                 }
             }
         }
 
         return dataSources;
+    }
+
+    public String fromHex(String hex) {
+        byte[] bytes = DatatypeConverter.parseHexBinary(hex);
+
+        return new String(bytes);
     }
 
     private DataSource createDataSource (String serverName,int portNumber, String user, String password){
