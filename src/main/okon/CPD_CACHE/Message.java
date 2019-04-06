@@ -5,14 +5,12 @@ import java.time.LocalDateTime;
 public class Message {
     private int startingFreeCacheSize;
     private int endingFreeCacheSize;
-    private LocalDateTime startTime;
-    private LocalDateTime endTime;
+    private String executionTime;
 
-    public Message(int startingFreeCacheSize, int endingFreeCacheSize, LocalDateTime startTime, LocalDateTime endTime) {
+    public Message(int startingFreeCacheSize, int endingFreeCacheSize, String executionTime) {
         this.startingFreeCacheSize = startingFreeCacheSize;
         this.endingFreeCacheSize = endingFreeCacheSize;
-        this.startTime = startTime;
-        this.endTime = endTime;
+        this.executionTime = executionTime;
     }
 
     public int getStartingFreeCacheSize() {
@@ -31,19 +29,11 @@ public class Message {
         this.endingFreeCacheSize = endingFreeCacheSize;
     }
 
-    public LocalDateTime getStartTime() {
-        return startTime;
+    public String getExecutionTime() {
+        return executionTime;
     }
 
-    public void setStartTime(LocalDateTime startTime) {
-        this.startTime = startTime;
-    }
-
-    public LocalDateTime getEndTime() {
-        return endTime;
-    }
-
-    public void setEndTime(LocalDateTime endTime) {
-        this.endTime = endTime;
+    public void setExecutionTime(String executionTime) {
+        this.executionTime = executionTime;
     }
 }

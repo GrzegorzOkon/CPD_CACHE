@@ -16,7 +16,7 @@ public class TxtFormatter {
 
         if (isCacheFreed()) {
             formattedText.add("Polecenie 'dbcc proc_cache(free_unused)' zostalo wykonane poprawnie.".getBytes());
-            formattedText.add(("Czas wykonania: " + Duration.between(message.getStartTime(), message.getEndTime()).toMillis() + " ms.").getBytes());
+            formattedText.add(("Czas wykonania: " + message.getExecutionTime() + " ms.").getBytes());
         } else {
             formattedText.add("Pamięć cache nie została zwolniona przez polecenie 'dbcc proc_cache(free_unused)'.".getBytes());
         }

@@ -4,7 +4,6 @@ import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
-import java.time.LocalDateTime;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -53,19 +52,5 @@ public class SybConnectionTest {
         } catch(AppException ex) {}
 
         assertTrue(freeCache > 90000);
-    }
-
-    @Test
-    public void shouldSayThatTimeIsNotNull() {
-        SybConnection sybConnection;
-        LocalDateTime time = null;
-
-        try {
-            sybConnection = new SybConnection(dataSourceMock);
-
-            time = sybConnection.getTimeStamp();
-        } catch(AppException ex) {}
-
-        assertNotNull(time);
     }
 }

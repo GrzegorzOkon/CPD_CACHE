@@ -1,9 +1,11 @@
 package okon.CPD_CACHE;
 
+import org.apache.commons.lang3.time.DurationFormatUtils;
+import org.apache.commons.lang3.time.StopWatch;
+
 import javax.sql.DataSource;
 import java.io.Closeable;
 import java.sql.*;
-import java.time.LocalDateTime;
 
 public class SybConnection implements Closeable {
     private final Connection connection;
@@ -19,16 +21,15 @@ public class SybConnection implements Closeable {
     public Message execute() {
         int startingFreeCacheSize = 0;
         int endingFreeCacheSize = 0;
-        LocalDateTime startTime = null;
-        LocalDateTime endTime = null;
+        StopWatch executionProcessWatch = new StopWatch();
 
         startingFreeCacheSize = checkFreeCacheSize();
-        startTime = getTimeStamp();
+        executionProcessWatch.start();
         freeUnusedCache();
-        endTime = getTimeStamp();
+        executionProcessWatch.stop();
         endingFreeCacheSize = checkFreeCacheSize();
 
-        return new Message(startingFreeCacheSize, endingFreeCacheSize, startTime, endTime);
+        return new Message(startingFreeCacheSize, endingFreeCacheSize, DurationFormatUtils.formatDuration(executionProcessWatch.getTime(), "S"));
     }
 
     public int checkFreeCacheSize() {
@@ -44,10 +45,6 @@ public class SybConnection implements Closeable {
         }
 
         return freeCacheSize;
-    }
-
-    public LocalDateTime getTimeStamp() {
-        return LocalDateTime.now();
     }
 
     public void freeUnusedCache() {
