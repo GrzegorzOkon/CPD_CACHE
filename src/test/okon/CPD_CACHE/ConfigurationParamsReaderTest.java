@@ -1,17 +1,15 @@
 package okon.CPD_CACHE;
 
+import okon.CPD_CACHE.config.ConfigurationParamsReader;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
-public class DataSourceBuilderTest {
+public class ConfigurationParamsReaderTest {
     @Test
     public void shouldSayThatStringIsEqualsConvertedHex() {
-        DataSourceBuilder builder = new DataSourceBuilder();
-
         String plainString = "maniana";
         String hexString = "6d616e69616e61";
-
-        assertEquals(plainString, builder.fromHex(hexString));
+        assertEquals(plainString, ConfigurationParamsReader.fromHex(hexString));
     }
 }

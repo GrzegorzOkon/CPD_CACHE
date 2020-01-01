@@ -6,11 +6,11 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
-public class TxtFormatterTest {
+public class MessageFormatterTest {
     @Test
     public void shouldSayThatFormattedMessageIsEquals() {
         Message messageStub = new Message(100000, 200000, "4000");
 
-        assertEquals("Czas wykonania: 4000 ms.", new String(new TxtFormatter(messageStub).format().get(1), StandardCharsets.UTF_8));
+        assertEquals("Czas wykonania: 4000 ms.", new String(new MessageFormatter(messageStub).format().get(1)));
     }
 }
